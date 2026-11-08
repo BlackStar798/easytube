@@ -50,7 +50,7 @@
 
 ### Windows
 
-1. Go to the **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** page and download `EasyTube-Setup-x.y.z.zip`.
+1. Go to the **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** page and download `EasyTube-Setup-x.y.z.Win.zip`.
 2. Unzip it and run `EasyTube-Setup-x.y.z.exe`.
 3. Requires **Windows 10 or 11 (64-bit)**.
 
@@ -59,14 +59,14 @@ Every release lists the **SHA-256** of the installer: you can compare it with th
 
 ### macOS
 
-1. Go to the **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** page and download `EasyTube-x.y.z-mac-arm64.zip` (Apple Silicon: M1 or newer).
+1. Go to the **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** page and download `EasyTube-x.y.z-Mac-Arm64.zip` (Apple Silicon: M1 or newer).
 2. Unzip it, open `EasyTube-x.y.z-mac-arm64.dmg` and drag **EasyTube** onto **Applications**.
 3. Requires **macOS 13.0 or newer** on an Apple Silicon Mac.
 
 The app is **not notarized by Apple** (that needs a paid developer account), so the **first time** macOS refuses to open it ("Apple could not verify…"). It is a one-time step:
 open **System Settings → Privacy & Security**, scroll down to the message about *EasyTube* and click **Open Anyway**, then confirm.
 (Terminal alternative: `xattr -dr com.apple.quarantine /Applications/EasyTube.app`.)
-Compare the **SHA-256** of the download with the one listed in the release (`shasum -a 256 EasyTube-x.y.z-mac-arm64.zip`) if you want to be sure. To uninstall, drag EasyTube to the Trash (your settings are in `~/Library/Application Support/EasyTube`).
+Compare the **SHA-256** of the download with the one listed in the release (`shasum -a 256 EasyTube-x.y.z-Mac-Arm64.zip`) if you want to be sure. To uninstall, drag EasyTube to the Trash (your settings are in `~/Library/Application Support/EasyTube`).
 
 ## Privacy
 
@@ -123,7 +123,7 @@ yt-dlp est le téléchargeur de vidéos le plus puissant, mais il ne s'utilise q
 yt-dlp et FFmpeg sont déjà inclus : rien d'autre à installer. **[Télécharger](https://github.com/BlackStar798/easytube/releases/latest)** · **[Site web](https://blackstar798.github.io/easytube/)**
 
 <p align="center">
-  <img src="docs/assets/win-audio.png" width="70%" alt="EasyTube en mode audio seul (MP3 / M4A)">
+  <img src="docs/assets/win-twitch-fr.png" width="70%" alt="EasyTube en français, avec les couleurs de Twitch">
 </p>
 
 ### Fonctionnalités
@@ -148,7 +148,7 @@ yt-dlp et FFmpeg sont déjà inclus : rien d'autre à installer. **[Télécharge
 
 #### Windows
 
-1. Va sur la page **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** et télécharge `EasyTube-Setup-x.y.z.zip`.
+1. Va sur la page **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** et télécharge `EasyTube-Setup-x.y.z.Win.zip`.
 2. Décompresse-le et lance `EasyTube-Setup-x.y.z.exe`.
 3. Nécessite **Windows 10 ou 11 (64 bits)**.
 
@@ -157,14 +157,14 @@ Chaque version indique l'empreinte **SHA-256** de l'installateur : compare-la à
 
 #### macOS
 
-1. Va sur la page **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** et télécharge `EasyTube-x.y.z-mac-arm64.zip` (Apple Silicon : M1 ou plus récent).
+1. Va sur la page **[Releases](https://github.com/BlackStar798/easytube/releases/latest)** et télécharge `EasyTube-x.y.z-Mac-Arm64.zip` (Apple Silicon : M1 ou plus récent).
 2. Décompresse-le, ouvre `EasyTube-x.y.z-mac-arm64.dmg` et glisse **EasyTube** sur **Applications**.
 3. Nécessite **macOS 13.0 ou plus récent** sur un Mac Apple Silicon.
 
 L'app **n'est pas notarisée par Apple** (cela demande un compte développeur payant) : **la première fois**, macOS refuse donc de l'ouvrir (« Apple n'a pas pu vérifier… »). C'est à faire une seule fois :
 ouvre **Réglages Système → Confidentialité et sécurité**, descends jusqu'au message qui parle d'*EasyTube* et clique sur **Ouvrir quand même**, puis confirme.
 (Variante Terminal : `xattr -dr com.apple.quarantine /Applications/EasyTube.app`.)
-Compare l'empreinte **SHA-256** du téléchargement à celle indiquée dans la release (`shasum -a 256 EasyTube-x.y.z-mac-arm64.zip`) si tu veux être sûr. Pour désinstaller, glisse EasyTube à la corbeille (tes réglages sont dans `~/Library/Application Support/EasyTube`).
+Compare l'empreinte **SHA-256** du téléchargement à celle indiquée dans la release (`shasum -a 256 EasyTube-x.y.z-Mac-Arm64.zip`) si tu veux être sûr. Pour désinstaller, glisse EasyTube à la corbeille (tes réglages sont dans `~/Library/Application Support/EasyTube`).
 
 ### Vie privée
 
