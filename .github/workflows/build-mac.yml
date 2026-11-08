@@ -31,12 +31,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Download Electron (Electron 45+ no longer does it during npm install)
+        run: node node_modules/electron/install.js
       - run: npm run check
       - run: npm test
       - name: Download yt-dlp and FFmpeg (checked against pinned SHA-256)
         run: node scripts/fetch-binaries.js --target darwin --arch ${{ matrix.arch }}
       - name: Build the app
-        run: npx electron-builder --mac --${{ matrix.arch }}
+        run: npx electron-builder --mac --${{ matrix.arch }} --publish never
       - name: Verify the result
         run: |
           APP="dist/mac-${{ matrix.arch }}/EasyTube.app"
