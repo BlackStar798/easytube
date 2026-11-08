@@ -1,0 +1,55 @@
+name: Build macOS app
+
+# Builds the macOS app on a real Mac (GitHub-hosted runner): tests, then the .dmg.
+# Run it by hand (Actions tab > "Build macOS app" > Run workflow) or by pushing a tag like v2.1.0.
+# The result is an ad-hoc signed app (free, no Apple Developer account): see docs/RELEASING.md.
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  mac:
+    name: macOS ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-latest
+          # Intel build (best effort, not tested on real Intel hardware): uncomment and check the runner label.
+          # - arch: x64
+          #   runner: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - name: Download yt-dlp and FFmpeg (checked against pinned SHA-256)
+        run: node scripts/fetch-binaries.js --target darwin --arch ${{ matrix.arch }}
+      - name: Build the app
+        run: npx electron-builder --mac --${{ matrix.arch }}
+      - name: Verify the result
+        run: |
+          APP="dist/mac-${{ matrix.arch }}/EasyTube.app"
+          [ -d "$APP" ] || APP="dist/mac/EasyTube.app"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          node node_modules/@electron/fuses/dist/bin.js read --app "$APP" | tee /tmp/fuses.txt
+          grep -q "EnableCookieEncryption is Disabled" /tmp/fuses.txt  # on: macOS would ask for a Keychain password at launch
+          "$APP/Contents/Resources/bin/yt-dlp" --version
+          "$APP/Contents/Resources/bin/ffmpeg" -version | head -1
+          ls "$APP/Contents/Resources/licenses/LICENSE.electron.txt" "$APP/Contents/Resources/licenses/LICENSES.chromium.html"
+          hdiutil verify dist/*.dmg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EasyTube-mac-${{ matrix.arch }}
+          path: dist/*.dmg
+          if-no-files-found: error
