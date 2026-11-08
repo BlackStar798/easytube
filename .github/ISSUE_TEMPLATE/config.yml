@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: yt-dlp issues (site support) / Problèmes yt-dlp (compatibilité des sites)
+    url: https://github.com/yt-dlp/yt-dlp/issues
+    about: If a site stopped working even with the latest yt-dlp, it may need a fix in yt-dlp itself.

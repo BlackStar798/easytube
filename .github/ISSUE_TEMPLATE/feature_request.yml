@@ -1,0 +1,11 @@
+name: Idea / Suggestion
+description: Suggest an improvement. / Propose une amélioration.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea / Ton idée
+      description: What would you like EasyTube to do, and why? / Que voudrais-tu qu'EasyTube fasse, et pourquoi ?
+    validations:
+      required: true

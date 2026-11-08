@@ -1,0 +1,29 @@
+name: Bug report / Signaler un bug
+description: Something does not work as expected. / Quelque chose ne marche pas comme prévu.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report! First try **Settings → Check for updates**: a newer yt-dlp often fixes download errors.
+        Merci ! Essaie d'abord **Réglages → Vérifier les mises à jour** : un yt-dlp plus récent règle souvent les erreurs.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Settings → About → "Copy diagnostics", then paste here. / Réglages → À propos → « Copier le diagnostic », puis colle ici.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Que s'est-il passé ?
+      description: What you did, what you expected, what happened instead. Screenshots help. / Ce que tu as fait, ce que tu attendais, ce qui s'est passé. Une capture aide.
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Website / Site
+      description: e.g. YouTube, Twitch… (no need to share a private link / pas besoin de partager un lien privé)
