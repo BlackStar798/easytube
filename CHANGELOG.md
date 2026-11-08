@@ -1,0 +1,217 @@
+# Changelog / Journal des versions
+
+All notable changes to EasyTube. *Tous les changements notables d'EasyTube.*
+
+## 2.1.2
+
+**English**
+
+- Mac: EasyTube can no longer show the "EasyTube wants to use your confidential information…" (Keychain) window. Version 2.1.0 removed it in the normal case, but it could still appear from time to time, for example after a restart, on a Mac where an older version had left an "EasyTube Safe Storage" item in the Keychain. The app is now cut off from the real Keychain: it has no need to access it.
+- Windows: no change from 2.1.1 (the fix for the "Listen" and "Show in folder" buttons with accented paths). Same version number everywhere: Windows, Mac and source code.
+
+**Français**
+
+- Mac : EasyTube ne peut plus afficher la fenêtre « EasyTube veut utiliser vos informations confidentielles… » (trousseau). La version 2.1.0 la supprimait dans le cas normal, mais elle pouvait encore apparaître de temps en temps, par exemple après un redémarrage, sur un Mac où une ancienne version avait laissé un élément « EasyTube Safe Storage » dans le trousseau. L'app est maintenant coupée du vrai trousseau : elle n'a aucun besoin d'y accéder.
+- Windows : aucun changement par rapport à la 2.1.1 (correctif des boutons « Écouter » et « Afficher dans le dossier » pour les chemins avec accents). Même numéro de version partout : Windows, Mac et code source.
+
+## 2.1.1
+
+**English**
+
+- Fix: on Windows, the "Listen" / "Play video" and "Show in folder" buttons on the finish screen (and "Show in folder" in the history) did nothing in some cases. Cause: Windows handed EasyTube a damaged file path whenever it contained an accent (the "Vidéos" folder of a French Windows, an accented user name) or non-Latin letters in the title (Arabic, Japanese, emoji…). The file was downloaded fine, but EasyTube looked for it in the wrong place.
+- EasyTube now reads the exact file path, in UTF-8, straight from yt-dlp. Nothing else changes: same settings, same history, install over the previous version.
+
+**Français**
+
+- Correction : sur Windows, les boutons « Écouter » / « Lire la vidéo » et « Afficher dans le dossier » de l'écran de fin (ainsi que « Afficher dans le dossier » de l'historique) ne faisaient rien dans certains cas. Cause : Windows renvoyait à EasyTube un chemin de fichier abîmé dès qu'il contenait un accent (le dossier « Vidéos » d'un Windows en français, un nom d'utilisateur accentué) ou des lettres non latines dans le titre (arabe, japonais, émojis…). Le fichier était bien téléchargé, mais EasyTube le cherchait au mauvais endroit.
+- EasyTube relit maintenant le chemin exact du fichier, en UTF-8, directement depuis yt-dlp. Aucun changement pour le reste : mêmes réglages, même historique, mise à jour par-dessus l'ancienne version.
+
+## 2.1.0
+
+**English**
+
+- EasyTube is now on Mac! Version for Apple Silicon Macs (M1 or newer), macOS 13 or newer: drag EasyTube into Applications from the .dmg window. Same features as on Windows (playlists, queue, MP4 / MKV, subtitles, settings), with the macOS menu bar, ⌘ shortcuts (⌘V pastes and analyzes, ⌘L, ⌘Enter, ⌘,) and the Mac window buttons.
+- First launch on Mac: the app is not notarized by Apple (that needs a paid developer account), so macOS asks you to confirm once: System Settings > Privacy & Security > "Open Anyway". The README in the zip lists the steps.
+- On Mac, your settings, history and yt-dlp copy live in ~/Library/Application Support/EasyTube. yt-dlp and FFmpeg are included (FFmpeg 9.0.2) and checked by SHA-256 fingerprint; yt-dlp can update itself from the app as on Windows. Cookies: Safari is offered too (it needs Full Disk Access for EasyTube, the app explains this). EasyTube asks for no password and does not use your Keychain.
+- The .dmg window: EasyTube-colored background with an arrow, a first-launch reminder in French and English, icon names readable on the dark background, the EasyTube icon on the disk and on the .dmg file.
+- Windows: the "Done" screen no longer cuts off the glow around the success badge and the main button (it was clipped square at the top and left). Nothing else changes: install as before, your data is kept.
+- For developers: the Mac build (Node 22 and a Mac are enough) is described in docs/BUILDING.md; Electron's and Chromium's licenses are copied into the Mac app's licenses folder.
+
+**Français**
+
+- EasyTube existe maintenant sur Mac ! Version pour les Mac Apple Silicon (M1 ou plus récent), macOS 13 ou plus récent : tu glisses EasyTube dans Applications depuis la fenêtre du .dmg. Mêmes fonctions que sur Windows (playlists, file d'attente, MP4 / MKV, sous-titres, réglages), avec la barre de menus de macOS, les raccourcis ⌘ (⌘V colle et analyse, ⌘L, ⌘Entrée, ⌘,) et les boutons de fenêtre du Mac.
+- Premier lancement sur Mac : l'app n'est pas notarisée par Apple (il faudrait un compte développeur payant), donc macOS demande une validation une seule fois : Réglages Système > Confidentialité et sécurité > « Ouvrir quand même ». Le LISEZMOI du zip explique les étapes.
+- Sur Mac, tes réglages, ton historique et ta copie de yt-dlp sont dans ~/Library/Application Support/EasyTube. yt-dlp et FFmpeg sont inclus (FFmpeg 9.0.2) et vérifiés par empreinte SHA-256 ; yt-dlp peut se mettre à jour depuis l'app comme sur Windows. Cookies : Safari est proposé en plus (il faut donner l'accès complet au disque à EasyTube, l'app l'explique). EasyTube ne demande aucun mot de passe et n'utilise pas ton trousseau.
+- Fenêtre d'installation du .dmg : fond aux couleurs d'EasyTube avec une flèche, rappel du premier lancement en français et en anglais, noms des icônes lisibles sur le fond sombre, icône EasyTube sur le disque et sur le fichier .dmg.
+- Windows : l'écran « Terminé » ne coupe plus le halo autour de la pastille de réussite ni du bouton principal (il était rogné net en haut et à gauche). Rien d'autre ne change : installer comme avant, tes données sont conservées.
+- Pour les développeurs : la compilation Mac (Node 22 et un Mac suffisent) est décrite dans docs/BUILDING.md ; les licences d'Electron et de Chromium sont copiées dans le dossier des licences de l'app Mac.
+
+## 2.0.0
+
+**English**
+
+- YouTube works better: YouTube now requires a small JavaScript computation before each download. EasyTube provides this engine itself (the one already inside the app), tests it at startup and falls back to the previous behavior if it does not answer. Settings > Advanced can turn it off. If YouTube still refuses, the error message says so clearly.
+- Playlists: after analyzing a playlist link, the list of videos is shown; tick the ones you want (or all / none). Each playlist is saved in its own folder, with numbered videos.
+- Queue: paste several links at once (one per line); they are analyzed and downloaded one after the other, and you can add more while a download is running.
+- New container choice: MP4 (plays everywhere) or MKV (keeps the best codecs above 1080p). Qualities go up to 4K / 8K when the video has them; above 1080p, a hint says to choose MKV if the MP4 file does not play.
+- Progress: the video title is shown while downloading; the merging, audio conversion and subtitle steps are named.
+- Keyboard shortcuts: Ctrl+V pastes and analyzes, Ctrl+L goes to the link bar, Ctrl+Enter starts the download, Ctrl+, opens the settings. Small tips on the home screen.
+- Settings reorganized in sections (downloads, sign-in, appearance, engine, advanced) with a Close button that is always visible. New: speed limit, proxy (http, https, socks), choice of subtitle languages, cookies.txt file in addition to reading the browser's cookies (with a warning for Chrome, Edge and Brave), switch for the automatic checks.
+- More precise errors: age confirmation, "not a robot" check, private video, members-only, live or premiere not started yet, too many requests (429), access denied (403), disk full, folder permission denied, certificate, format unavailable, missing JavaScript engine. Each one suggests what to try. Fixed: an age-restricted video was reported as a robot check.
+- About: a "Copy diagnostics" button (versions, system, useful settings, no link or personal file) for bug reports, and "Check for a new EasyTube version" (active once the project address is set; it downloads and installs nothing, it opens the release page).
+- Installer: installing over an older version updates it in place and KEEPS your settings, history and yt-dlp copy (no need to uninstall first). Uninstalling asks whether to keep your settings and history.
+- Security: everything that comes from the window (settings, download options, proxy, languages) is checked before it is saved or handed to yt-dlp; Electron hardened (NODE_OPTIONS and debug flags are ignored, cookies encrypted); a download cancelled before it starts no longer launches.
+- FFprobe goes from version 4.0.2 to 6.1.1, the same as FFmpeg (same build). The FFmpeg download is now verified by SHA-256 at build time.
+- Accessibility: consistent page headings, automated check with no error (axe-core) in English and French, on every screen. Fixed: the previous video's duration stayed visible after going back to the home screen.
+- Quality: 40 automated tests (yt-dlp arguments, validation, progress, errors, updates) and continuous integration (GitHub Actions) on Windows and Linux.
+
+**Français**
+
+- YouTube refonctionne mieux : YouTube impose maintenant un petit calcul JavaScript avant chaque téléchargement. EasyTube fournit lui-même ce moteur (celui déjà inclus dans l'appli), le teste au démarrage et revient au fonctionnement précédent s'il ne répond pas. Réglages > Avancé permet de le désactiver. Si YouTube refuse quand même, le message d'erreur le dit clairement.
+- Playlists : après l'analyse d'un lien de playlist, la liste des vidéos s'affiche ; coche celles que tu veux (ou tout / rien). Chaque playlist est enregistrée dans son dossier, avec les vidéos numérotées.
+- File d'attente : colle plusieurs liens d'un coup (un par ligne) ; ils sont analysés puis téléchargés l'un après l'autre, et tu peux en ajouter pendant qu'un téléchargement tourne.
+- Nouveau choix du conteneur : MP4 (compatible partout) ou MKV (garde les meilleurs codecs au-delà de 1080p). Les qualités vont jusqu'à la 4K / 8K quand la vidéo les propose ; au-delà de 1080p, un conseil indique de choisir MKV si le fichier MP4 ne se lit pas.
+- Progression : le titre de la vidéo s'affiche pendant le téléchargement ; l'étape d'assemblage, de conversion audio ou de sous-titres est nommée.
+- Raccourcis clavier : Ctrl+V colle et analyse, Ctrl+L va à la barre de lien, Ctrl+Entrée lance le téléchargement, Ctrl+, ouvre les réglages. Petits conseils sur l'écran d'accueil.
+- Réglages réorganisés en sections (téléchargements, connexion, apparence, moteur, avancé) avec un bouton Fermer toujours visible. Nouveautés : limite de vitesse, proxy (http, https, socks), langues des sous-titres au choix, fichier cookies.txt en plus de la lecture des cookies du navigateur (avec un avertissement pour Chrome, Edge et Brave), interrupteur des vérifications automatiques.
+- Erreurs plus précises : âge à confirmer, vérification « robot », vidéo privée, réservée aux abonnés, live ou première pas encore commencés, trop de requêtes (429), accès refusé (403), disque plein, accès refusé au dossier, certificat, format indisponible, moteur JavaScript manquant. Chacune propose une piste. Corrigé : une vidéo « 18+ » était présentée comme une vérification robot.
+- À propos : bouton « Copier le diagnostic » (versions, système, réglages utiles, sans lien ni fichier personnel) pour les rapports de bug, et « Vérifier la nouvelle version d'EasyTube » (actif quand l'adresse du projet est renseignée ; il ne télécharge ni n'installe rien, il ouvre la page de la version).
+- Installateur : installer par-dessus une ancienne version la met à jour sur place et GARDE tes réglages, ton historique et ta copie de yt-dlp (plus besoin de désinstaller d'abord). La désinstallation demande si tu veux garder tes réglages et ton historique.
+- Sécurité : tout ce qui vient de la fenêtre (réglages, options de téléchargement, proxy, langues) est vérifié avant d'être enregistré ou transmis à yt-dlp ; Electron durci (les variables NODE_OPTIONS et les options de débogage sont ignorées, cookies chiffrés) ; un téléchargement annulé avant son démarrage ne se lance plus.
+- FFprobe passe de la version 4.0.2 à la 6.1.1, la même que FFmpeg (même build). Le téléchargement de FFmpeg est maintenant vérifié par signature SHA-256 à la construction.
+- Accessibilité : titres de page cohérents, vérification automatique sans erreur (axe-core) en anglais et en français, dans tous les écrans. Corrigé : la durée de la vidéo précédente restait affichée après un retour à l'accueil.
+- Qualité : 40 tests automatiques (arguments yt-dlp, validation, progression, erreurs, mises à jour) et intégration continue (GitHub Actions) sur Windows et Linux.
+
+## 1.5.0
+
+**English**
+
+- Open-source preparation: EasyTube is released under the MIT License (LICENSE file). The bundled programs and font keep their own licenses: yt-dlp (Unlicense; GPL-3.0+ for the .exe build), FFmpeg (GPL-3.0), Electron (MIT) and Bricolage Grotesque (SIL OFL 1.1).
+- New "About EasyTube & licenses" window (Settings > "About"...): app version, yt-dlp, FFmpeg and Electron versions, license, credits, and a button that opens the licenses folder.
+- The "licenses" folder is installed with the program: full texts (MIT, GPL-3.0, Unlicense, OFL), the list of yt-dlp's components, and links to the FFmpeg and yt-dlp source code.
+- Installer: the "About" page mentions the MIT License and the components' licenses.
+- No change to the download engine or to how the app works (yt-dlp, ffmpeg and ffprobe identical).
+
+**Français**
+
+- Préparation open source : EasyTube est publié sous licence MIT (fichier LICENSE). Les programmes et la police inclus gardent leurs propres licences : yt-dlp (Unlicense ; GPL-3.0+ pour la version .exe), FFmpeg (GPL-3.0), Electron (MIT) et Bricolage Grotesque (SIL OFL 1.1).
+- Nouvelle fenêtre « À propos d'EasyTube et licences » (Réglages > « À propos »...) : version du programme, versions de yt-dlp, FFmpeg et Electron, licence, remerciements, et un bouton pour ouvrir le dossier des licences.
+- Le dossier « licenses » est installé avec le programme : textes complets (MIT, GPL-3.0, Unlicense, OFL), liste des composants de yt-dlp et liens vers le code source de FFmpeg et yt-dlp.
+- Installateur : la page « About » mentionne la licence MIT et les licences des composants.
+- Aucun changement du moteur de téléchargement ni du fonctionnement (yt-dlp, ffmpeg et ffprobe identiques).
+
+## 1.4.0
+
+**English**
+
+- Link history: the "Recent" list becomes a 10-link history. Click a row and the link goes back into the bar and is analyzed (re-download in one click). Buttons on hover: copy the link, show the file in its folder, remove from history; "Clear all" asks for confirmation.
+- The same link appears only once in the history (an audio and a video download of the same link stay two entries). Older entries, with no saved link, remain visible and open their folder.
+- Dynamic theme: as soon as you paste a link, the app's colors match the site (YouTube red, Twitch purple, Facebook blue, Instagram pink, TikTok, X in white, Vimeo, Dailymotion, Reddit, SoundCloud, Kick, Rumble, Bilibili, Pinterest), with a smooth fade. A pill with the site's name appears in the bar.
+- Settings: a "Use the site's colors" switch to turn the dynamic theme off (your app color then always stays the same). While Settings is open, your usual color is shown.
+- A grey or white color picked in Settings now stays neutral instead of turning red.
+- Small windows: the right column scrolls when needed, and in a narrow window the history is shown before the empty preview.
+
+**Français**
+
+- Historique des liens : la liste « Récents » devient un historique de 10 liens. Clic sur une ligne = le lien revient dans la barre et s'analyse (re-télécharger en un clic). Boutons au survol : copier le lien, afficher le fichier dans le dossier, retirer de l'historique ; « Tout effacer » demande une confirmation.
+- Un même lien n'apparaît qu'une fois dans l'historique (un téléchargement audio et un téléchargement vidéo du même lien restent deux entrées). Les anciennes entrées, sans lien enregistré, restent visibles et ouvrent leur dossier.
+- Thème dynamique : dès que tu colles un lien, les couleurs de l'application s'adaptent au site (YouTube rouge, Twitch violet, Facebook bleu, Instagram rose, TikTok, X en blanc, Vimeo, Dailymotion, Reddit, SoundCloud, Kick, Rumble, Bilibili, Pinterest), avec un fondu en douceur. Une pastille avec le nom du site apparaît dans la barre.
+- Réglages : un interrupteur « Utiliser les couleurs du site » pour désactiver ce thème dynamique (ta couleur d'application reste alors toujours la même). Pendant que les Réglages sont ouverts, ta couleur habituelle s'affiche.
+- Une couleur grise ou blanche choisie dans les Réglages reste neutre au lieu de virer au rouge.
+- Petites fenêtres : la colonne de droite défile si besoin, et en fenêtre étroite l'historique s'affiche avant l'aperçu vide.
+
+## 1.3.0
+
+**English**
+
+- New welcome screen on first launch: a quick introduction (YouTube, Twitch, Facebook, Instagram, TikTok, X, Vimeo… and hundreds of other sites) and the 3 steps to download.
+- The welcome screen can be shown again at any time: Settings > "Show the welcome screen".
+- The zip's LISEZMOI.txt becomes README.txt, in French and English, with the full version-by-version changelog.
+
+**Français**
+
+- Nouvel écran de bienvenue au premier lancement : présentation rapide (YouTube, Twitch, Facebook, Instagram, TikTok, X, Vimeo… et des centaines d'autres sites) et les 3 étapes pour télécharger.
+- L'écran de bienvenue peut être ré-affiché à tout moment : Réglages > « Afficher l'écran de bienvenue ».
+- Le fichier du zip LISEZMOI.txt devient README.txt, en français et en anglais, avec le journal de tous les changements version par version.
+
+## 1.2.0
+
+**English**
+
+- The app and the installer are in English by default; an EN | FR switch at the top right lets you change to French at any time (your choice is remembered).
+- All texts are translated: screens, error messages, notifications, dialogs. Units and dates follow the language (GB/MB or Go/Mo, "yesterday" or "hier").
+- Installer: texts, "About" page, close-the-app message and side image in English; the file is now named EasyTube-Setup-x.y.z.exe.
+- No change to the download engine (yt-dlp, ffmpeg and ffprobe are identical).
+
+**Français**
+
+- Le programme et l'installateur sont en anglais par défaut ; un sélecteur EN | FR en haut à droite permet de passer en français à tout moment (le choix est mémorisé).
+- Tous les textes sont traduits : écrans, messages d'erreur, notifications, boîtes de dialogue. Unités et dates s'adaptent à la langue (Go/Mo ou GB/MB, « hier » ou « yesterday »).
+- Installateur : textes, page « About », message de fermeture et image latérale en anglais ; le fichier s'appelle maintenant EasyTube-Setup-x.y.z.exe.
+- Aucun changement du moteur de téléchargement (yt-dlp, ffmpeg et ffprobe identiques).
+
+## 1.1.5
+
+**English**
+
+- Installer: richer introduction text (free and open-source app, made with Claude Code, a simple interface for yt-dlp, which has none) and an "About" page thanking yt-dlp and FFmpeg.
+- The app itself is identical to 1.1.4.
+
+**Français**
+
+- Installateur : texte de présentation enrichi (logiciel gratuit et open source, créé avec Claude Code, simple interface pour yt-dlp qui n'en a pas) et page « À propos » avec remerciements à yt-dlp et FFmpeg.
+- L'application elle-même est identique à la 1.1.4.
+
+## 1.1.4
+
+**English**
+
+- Reference build: everything works (downloads, subtitles, progress).
+- Progress bar: no more "99% then 1%" jump with subtitles (their small files no longer count in the bar); picture counts for 0-90%, sound for 90-100%, and the bar never goes backwards.
+- If no progress arrives for 4 seconds, the bar switches to an animated "waiting" mode instead of staying stuck at 0%.
+- Back to the proven yt-dlp progress format (fixes the 1.1.3 regression).
+
+**Français**
+
+- Version de référence : tout fonctionne (téléchargements, sous-titres, progression).
+- Barre de progression : plus de saut « 99 % puis 1 % » avec les sous-titres (leurs petits fichiers ne comptent plus dans la barre) ; l'image compte pour 0-90 %, le son pour 90-100 %, et la barre ne recule jamais.
+- Si aucune progression n'arrive pendant 4 secondes, la barre passe en mode « en attente » animé au lieu de rester bloquée à 0 %.
+- Retour au format de suivi de yt-dlp qui a fait ses preuves (corrige la régression de la 1.1.3).
+
+## 1.1.3
+
+**English**
+
+- Attempt to fix the progress jump with subtitles. Regression: on YouTube the bar stayed stuck at 0% until the end. Replaced by 1.1.4: do not use.
+
+**Français**
+
+- Tentative de correction du saut de progression avec les sous-titres. Régression : sur YouTube, la barre restait bloquée à 0 % jusqu'à la fin. Remplacée par la 1.1.4 : ne pas utiliser.
+
+## 1.1.2
+
+**English**
+
+- Fixed downloads that failed with "Add subtitles" (HTTP 429 error on the subtitles): only the exact languages are requested (French, English, Arabic) and a subtitle failure no longer prevents getting the video.
+
+**Français**
+
+- Correction des téléchargements qui échouaient avec « Ajouter les sous-titres » (erreur HTTP 429 sur les sous-titres) : seules les langues exactes sont demandées (français, anglais, arabe) et un échec de sous-titres n'empêche plus de récupérer la vidéo.
+
+## 1.0 – 1.1.1
+
+**English**
+
+- Windows app (Electron) built around yt-dlp, with ffmpeg and ffprobe included: paste a link, video preview, quality choice, audio only (MP3 or M4A), subtitles, playlists, download folder of your choice, recent downloads list, detection of a copied link.
+- Premium black theme with one accent color of your choice (8 colors or any custom color), emojis, animations (rocket on the bar, confetti, finish sound); named EasyTube (formerly Video Grabber).
+- Windows installer with install-folder choice and a sharp side image.
+- yt-dlp update on demand, nothing installed without your click, with SHA-256 verification of the official file; warning when an antivirus blocks the connection; technical details shown on errors.
+- Antivirus false-positive precautions: the installer never force-closes a program and the app never updates itself silently.
+
+**Français**
+
+- Application Windows (Electron) autour de yt-dlp, avec ffmpeg et ffprobe inclus : coller un lien, aperçu de la vidéo, choix de la qualité, audio seul (MP3 ou M4A), sous-titres, playlists, dossier de téléchargement au choix, liste des récents, détection d'un lien copié.
+- Thème noir premium avec une couleur d'accent au choix (8 couleurs ou une couleur libre), emojis, animations (fusée sur la barre, confettis, son de fin) ; nom EasyTube (ancien nom : Video Grabber).
+- Installateur Windows avec choix du dossier d'installation, image latérale nette.
+- Mise à jour de yt-dlp à la demande, sans rien installer sans ton clic, avec vérification de la signature SHA-256 du fichier officiel ; avertissement si un antivirus bloque la connexion ; détails techniques affichés en cas d'erreur.
+- Précautions anti-faux-positifs pour les antivirus : l'installateur ne ferme jamais un programme de force et l'application ne se met jamais à jour toute seule.

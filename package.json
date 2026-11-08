@@ -1,0 +1,126 @@
+{
+  "name": "easytube",
+  "productName": "EasyTube",
+  "version": "2.1.2",
+  "description": "EasyTube: a simple, modern interface for yt-dlp (Windows and macOS)",
+  "main": "main.js",
+  "author": "Mehdi",
+  "license": "MIT",
+  "homepage": "https://blackstar798.github.io/easytube/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BlackStar798/easytube"
+  },
+  "bugs": {
+    "url": "https://github.com/BlackStar798/easytube/issues"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@electron/fuses": "^1.8.0",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0",
+    "resedit": "^3.1.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "fetch-binaries": "node scripts/fetch-binaries.js",
+    "check": "node scripts/check-locales.js",
+    "test": "node --test",
+    "dist": "electron-builder --win --x64",
+    "dist:mac": "electron-builder --mac --arm64"
+  },
+  "build": {
+    "appId": "com.mehdi.easytube",
+    "productName": "EasyTube",
+    "copyright": "Copyright (c) 2026 The EasyTube contributors. MIT License.",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**/*",
+      "renderer/**/*",
+      "locales/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "licenses",
+        "to": "licenses"
+      }
+    ],
+    "asar": true,
+    "compression": "maximum",
+    "electronLanguages": [
+      "fr",
+      "en-US",
+      "en"
+    ],
+    "afterPack": "./build/afterPack.js",
+    "afterAllArtifactBuild": "./build/afterAllArtifactBuild.js",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "extraResources": [
+        {
+          "from": "resources/bin",
+          "to": "bin"
+        }
+      ]
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "build/icon.icns",
+      "target": [
+        "dmg"
+      ],
+      "artifactName": "${productName}-${version}-mac-${arch}.${ext}",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "extraResources": [
+        {
+          "from": "resources/bin-mac-${arch}",
+          "to": "bin"
+        }
+      ]
+    },
+    "dmg": {
+      "title": "EasyTube ${version}",
+      "background": "build/dmg-background.png",
+      "iconSize": 112,
+      "window": {
+        "width": 660,
+        "height": 400
+      },
+      "contents": [
+        {
+          "x": 180,
+          "y": 190,
+          "type": "file"
+        },
+        {
+          "x": 480,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  }
+}

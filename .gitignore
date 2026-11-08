@@ -1,0 +1,16 @@
+# dependencies and build output
+node_modules/
+dist/
+
+# downloaded binaries (rebuilt by `npm run fetch-binaries`)
+resources/bin/*
+!resources/bin/README.md
+resources/bin-mac-*/
+
+# logs, editors, OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
