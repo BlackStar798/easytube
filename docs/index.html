@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EasyTube — A free UI for yt-dlp (Windows & macOS)</title>
+<meta name="description" content="EasyTube is a free, open-source app with a simple, modern interface for yt-dlp. Paste a link, pick a quality, download. Windows and macOS.">
+<meta property="og:title" content="EasyTube — the simple way to use yt-dlp">
+<meta property="og:description" content="Free and open source. Paste a link, pick a quality, download. Windows and macOS.">
+<meta property="og:image" content="https://blackstar798.github.io/easytube/assets/social.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#07070a">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-display:swap;font-weight:200 800;font-stretch:75% 100%;src:url(assets/fonts/bricolage-grotesque-latin-wdth-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-display:swap;font-weight:200 800;font-stretch:75% 100%;src:url(assets/fonts/bricolage-grotesque-latin-ext-wdth-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
+:root{
+  --bg:#07070a;--well:#101016;--raised:#16161e;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.16);
+  --chalk:#f3f3f8;--muted:#9b9bb0;--dim:#6f6f84;
+  --accent:#8b5cf6;--accent-hi:#a07bff;--accent-lo:#6c3de6;--accent-text:#b9a1ff;--glow:rgba(139,92,246,.35);
+  --r:18px;--max:1160px;
+  --font:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--chalk);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto;display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+[data-lang-fr]{display:none}
+html[lang=fr] [data-lang-fr]{display:revert}
+html[lang=fr] [data-lang-en]{display:none}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(7,7,10,.72);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;height:64px;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.01em}
+.brand img{width:30px;height:30px;border-radius:8px}
+nav .links{display:flex;gap:26px;margin-left:auto;font-size:15px;color:var(--muted)}
+nav .links a:hover{color:var(--chalk)}
+.lang{display:flex;border:1px solid var(--line-strong);border-radius:10px;padding:3px;gap:2px}
+.lang button{all:unset;cursor:pointer;font-size:13px;font-weight:700;padding:4px 10px;border-radius:7px;color:var(--muted)}
+.lang button[aria-pressed=true]{background:var(--chalk);color:#000}
+.gh{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;border:1px solid var(--line-strong);border-radius:10px;padding:7px 12px}
+.gh:hover{border-color:var(--accent-text)}
+.gh svg{width:17px;height:17px;fill:currentColor}
+
+/* hero */
+.hero{position:relative;padding:96px 0 40px;text-align:center}
+.hero::before{content:"";position:absolute;inset:-200px 0 auto;height:900px;background:radial-gradient(700px 420px at 50% 30%,rgba(139,92,246,.28),transparent 70%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 60% 50% at 50% 20%,#000,transparent);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 20%,#000,transparent);pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--accent-text);border:1px solid rgba(185,161,255,.3);background:rgba(139,92,246,.1);border-radius:999px;padding:6px 14px}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--accent-hi);box-shadow:0 0 10px var(--accent-hi)}
+h1{font-size:clamp(44px,8vw,92px);line-height:1;letter-spacing:-.045em;font-weight:800;margin:26px auto 22px;max-width:900px}
+h1 .grad{background:linear-gradient(120deg,#fff 10%,var(--accent-text) 60%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(17px,2.2vw,21px);color:var(--muted);max-width:640px;margin:0 auto}
+.lead b{color:var(--chalk);font-weight:600}
+.ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:38px}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:15px 24px;border-radius:14px;font-weight:700;font-size:16px;transition:transform .15s,box-shadow .2s,border-color .2s}
+.btn svg{width:20px;height:20px;fill:currentColor}
+.btn small{display:block;font-weight:500;font-size:12px;opacity:.75;line-height:1.2}
+.btn span{text-align:left;line-height:1.25}
+.btn-primary{background:linear-gradient(180deg,var(--accent-hi),var(--accent-lo));color:#fff;box-shadow:0 10px 40px var(--glow),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 50px rgba(139,92,246,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-ghost{border:1px solid var(--line-strong);background:rgba(255,255,255,.03)}
+.btn-ghost:hover{border-color:var(--accent-text);transform:translateY(-2px)}
+.meta{margin-top:18px;font-size:14px;color:var(--dim)}
+.shot{margin:40px auto 0;width:100%;max-width:1200px;height:auto}
+
+/* sections */
+section{padding:96px 0}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-text)}
+h2{font-size:clamp(32px,5vw,52px);line-height:1.05;letter-spacing:-.035em;font-weight:800;margin:12px 0 16px}
+.sub{color:var(--muted);max-width:600px;font-size:18px}
+.center{text-align:center}.center .sub{margin:0 auto}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+.step{text-align:left;background:var(--well);border:1px solid var(--line);border-radius:var(--r);padding:28px}
+.step .n{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-hi),var(--accent-lo));box-shadow:0 6px 24px var(--glow);margin-bottom:18px}
+.step h3{font-size:21px;letter-spacing:-.01em;margin-bottom:6px}
+.step p{color:var(--muted);font-size:16px}
+
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+.f{background:linear-gradient(180deg,var(--raised),var(--well));border:1px solid var(--line);border-radius:var(--r);padding:26px;transition:border-color .2s,transform .2s}
+.f:hover{border-color:rgba(185,161,255,.35);transform:translateY(-3px)}
+.f .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(139,92,246,.12);border:1px solid rgba(185,161,255,.25);margin-bottom:16px}
+.f .ic svg{width:22px;height:22px;stroke:var(--accent-text);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.f h3{font-size:19px;margin-bottom:6px;letter-spacing:-.01em}
+.f p{color:var(--muted);font-size:15.5px}
+
+.split{display:grid;grid-template-columns:1fr 1.25fr;gap:56px;align-items:center}
+.split.rev{grid-template-columns:1.25fr 1fr}
+.split.rev .txt{order:2}
+.checks{list-style:none;margin-top:24px;display:grid;gap:12px}
+.checks li{display:flex;gap:12px;color:var(--muted)}
+.checks li::before{content:"";flex:0 0 20px;height:20px;margin-top:3px;border-radius:6px;background:rgba(139,92,246,.18) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3 3 7-7' fill='none' stroke='%23b9a1ff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.checks b{color:var(--chalk);font-weight:600}
+.sites{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.sites span{font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line-strong);color:var(--muted)}
+.sites span i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:48px}
+.card{background:var(--well);border:1px solid var(--line);border-radius:22px;padding:32px;display:flex;flex-direction:column}
+.card .os{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.card .os svg{width:30px;height:30px;fill:var(--chalk)}
+.card h3{font-size:26px;letter-spacing:-.02em}
+.card .req{color:var(--dim);font-size:14px;margin-bottom:20px}
+.card ol{padding-left:20px;color:var(--muted);font-size:15.5px;display:grid;gap:6px;margin-bottom:22px}
+.card ol b{color:var(--chalk);font-weight:600}
+.note{font-size:14px;color:var(--muted);background:rgba(139,92,246,.07);border:1px solid rgba(185,161,255,.18);border-radius:12px;padding:12px 14px;margin-bottom:24px}
+.card .btn{margin-top:auto;justify-content:center}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;background:rgba(255,255,255,.06);border:1px solid var(--line);padding:1px 6px;border-radius:6px;color:var(--chalk)}
+
+.faq{max-width:780px;margin:48px auto 0;display:grid;gap:12px}
+details{background:var(--well);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+details[open]{border-color:rgba(185,161,255,.25)}
+summary{cursor:pointer;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--accent-text);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin-top:10px;font-size:15.5px}
+
+.final{text-align:center;border:1px solid var(--line);border-radius:28px;padding:72px 24px;background:radial-gradient(600px 300px at 50% 0%,rgba(139,92,246,.25),transparent 70%),var(--well)}
+
+footer{border-top:1px solid var(--line);padding:40px 0 56px;color:var(--dim);font-size:14px}
+footer .wrap{display:flex;gap:24px;flex-wrap:wrap;justify-content:space-between}
+footer a{color:var(--muted)}footer a:hover{color:var(--chalk)}
+footer .fl{display:flex;gap:20px;flex-wrap:wrap}
+footer p{max-width:560px}
+
+@media (max-width:900px){
+  .steps,.features{grid-template-columns:1fr 1fr}
+  .split,.split.rev{grid-template-columns:1fr;gap:32px}
+  .split.rev .txt{order:0}
+  .dl{grid-template-columns:1fr}
+  nav .links{display:none}
+  .lang{margin-left:auto}
+}
+@media (max-width:600px){
+  .steps,.features{grid-template-columns:1fr}
+  section{padding:72px 0}
+  .hero{padding-top:64px}
+  .gh span{display:none}
+  .btn{width:100%;justify-content:center}
+  .shot{border-radius:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#"><img src="assets/icon.png" alt="">EasyTube</a>
+    <div class="links">
+      <a href="#features"><span data-lang-en>Features</span><span data-lang-fr>Fonctions</span></a>
+      <a href="#download"><span data-lang-en>Download</span><span data-lang-fr>Télécharger</span></a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set="en" aria-pressed="true">EN</button>
+      <button type="button" data-set="fr" aria-pressed="false">FR</button>
+    </div>
+    <a class="gh" href="https://github.com/BlackStar798/easytube"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span>GitHub</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="badge"><i></i><span data-lang-en>The graphical interface (UI) for yt-dlp · v2.1.2</span><span data-lang-fr>L'interface graphique (UI) pour yt-dlp · v2.1.2</span></span>
+    <h1 data-lang-en>Paste a link.<br><span class="grad">Get the video.</span></h1>
+    <h1 data-lang-fr>Colle un lien.<br><span class="grad">Récupère la vidéo.</span></h1>
+    <p class="lead" data-lang-en>EasyTube is a <b>free, open-source UI for yt-dlp</b>, the most powerful video downloader. yt-dlp only works in the command line: EasyTube turns it into a simple, modern app. Nothing else to install.</p>
+    <p class="lead" data-lang-fr>EasyTube est une <b>interface graphique (UI) gratuite et open source pour yt-dlp</b>, le téléchargeur de vidéos le plus puissant. yt-dlp ne s'utilise qu'en ligne de commande : EasyTube en fait une appli simple et moderne. Rien d'autre à installer.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://github.com/BlackStar798/easytube/releases/latest">
+        <svg viewBox="0 0 24 24"><path d="M3 5.5l7.4-1v7.1H3V5.5zm0 13l7.4 1v-7H3v6zm8.3 1.1L21 21v-8.4h-9.7v7zm0-15.2v7.2H21V3l-9.7 1.4z"/></svg>
+        <span><span data-lang-en>Download for Windows</span><span data-lang-fr>Télécharger pour Windows</span><small>Windows 10 / 11 · 64-bit</small></span>
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/BlackStar798/easytube/releases/latest">
+        <svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM13.9 5c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"/></svg>
+        <span><span data-lang-en>Download for macOS</span><span data-lang-fr>Télécharger pour macOS</span><small>Apple Silicon · macOS 13+</small></span>
+      </a>
+    </div>
+    <p class="meta" data-lang-en>No account · No ads · No telemetry · MIT License</p>
+    <p class="meta" data-lang-fr>Sans compte · Sans pub · Sans télémétrie · Licence MIT</p>
+    <img class="shot duo" src="assets/duo.png" width="1400" height="900" alt="EasyTube on Windows and macOS">
+  </div>
+</header>
+
+<section id="how">
+  <div class="wrap center">
+    <div class="eyebrow" data-lang-en>How it works</div><div class="eyebrow" data-lang-fr>Comment ça marche</div>
+    <h2 data-lang-en>Three steps. That's it.</h2><h2 data-lang-fr>Trois étapes. C'est tout.</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div>
+        <h3 data-lang-en>Paste</h3><h3 data-lang-fr>Colle</h3>
+        <p data-lang-en>Copy a link from YouTube, Twitch, TikTok… and paste it. EasyTube shows the title, thumbnail and duration.</p>
+        <p data-lang-fr>Copie un lien YouTube, Twitch, TikTok… et colle-le. EasyTube affiche le titre, la miniature et la durée.</p></div>
+      <div class="step"><div class="n">2</div>
+        <h3 data-lang-en>Choose</h3><h3 data-lang-fr>Choisis</h3>
+        <p data-lang-en>Pick from the real list of available qualities, up to 4K / 8K, with the estimated size. Or audio only, in MP3 or M4A.</p>
+        <p data-lang-fr>Choisis dans la vraie liste des qualités disponibles, jusqu'à la 4K / 8K, avec la taille estimée. Ou l'audio seul, en MP3 ou M4A.</p></div>
+      <div class="step"><div class="n">3</div>
+        <h3 data-lang-en>Download</h3><h3 data-lang-fr>Télécharge</h3>
+        <p data-lang-en>Follow the progress, speed and time left. A notification tells you when it's ready, one click opens the file.</p>
+        <p data-lang-fr>Suis la progression, la vitesse et le temps restant. Une notification te prévient, un clic ouvre le fichier.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:24px">
+  <div class="wrap center">
+    <div class="eyebrow" data-lang-en>Features</div><div class="eyebrow" data-lang-fr>Fonctions</div>
+    <h2 data-lang-en>Powerful inside. Simple outside.</h2><h2 data-lang-fr>Puissant dedans. Simple dehors.</h2>
+    <p class="sub" data-lang-en>Everything yt-dlp can do, without having to learn a single command.</p>
+    <p class="sub" data-lang-fr>Tout ce que sait faire yt-dlp, sans apprendre une seule commande.</p>
+    <div class="features" style="text-align:left">
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9.5v5l4-2.5z"/></svg></div>
+        <h3 data-lang-en>Up to 4K / 8K</h3><h3 data-lang-fr>Jusqu'à 4K / 8K</h3>
+        <p data-lang-en>The real qualities of each video, MP4 or MKV, with optional subtitles in your languages.</p>
+        <p data-lang-fr>Les vraies qualités de chaque vidéo, en MP4 ou MKV, avec sous-titres en option dans tes langues.</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1v-6h3zM3 19a2 2 0 002 2h1v-6H3z"/></svg></div>
+        <h3 data-lang-en>Audio only</h3><h3 data-lang-fr>Audio seul</h3>
+        <p data-lang-en>Grab just the sound as MP3 (works everywhere) or M4A (higher fidelity).</p>
+        <p data-lang-fr>Récupère juste le son en MP3 (compatible partout) ou M4A (meilleure fidélité).</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
+        <h3 data-lang-en>Playlists &amp; queue</h3><h3 data-lang-fr>Playlists et file d'attente</h3>
+        <p data-lang-en>Tick the videos you want, or paste several links at once. They download one after the other.</p>
+        <p data-lang-fr>Coche les vidéos voulues, ou colle plusieurs liens d'un coup. Ils se téléchargent l'un après l'autre.</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18z" fill="rgba(185,161,255,.35)"/></svg></div>
+        <h3 data-lang-en>Dynamic theme</h3><h3 data-lang-fr>Thème dynamique</h3>
+        <p data-lang-en>The app takes the colors of the site you paste: YouTube red, Twitch purple… or your own accent.</p>
+        <p data-lang-fr>L'appli prend les couleurs du site collé : rouge YouTube, violet Twitch… ou ta propre couleur.</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.7 9.7 0 00-6.7 2.8L3 8"/><path d="M3 3v5h5M12 7v5l4 2"/></svg></div>
+        <h3 data-lang-en>History</h3><h3 data-lang-fr>Historique</h3>
+        <p data-lang-en>Your last 10 links: download again, copy the link or show the file in its folder.</p>
+        <p data-lang-fr>Tes 10 derniers liens : re-télécharger, copier le lien ou afficher le fichier dans son dossier.</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3 data-lang-en>Safe updates</h3><h3 data-lang-fr>Mises à jour sûres</h3>
+        <p data-lang-en>Update yt-dlp in one click when you decide. The official file is verified by SHA-256 before use.</p>
+        <p data-lang-fr>Mets à jour yt-dlp en un clic, quand tu veux. Le fichier officiel est vérifié par SHA-256 avant usage.</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg></div>
+        <h3 data-lang-en>Friendly errors</h3><h3 data-lang-fr>Erreurs expliquées</h3>
+        <p data-lang-en>Every failure comes with a clear explanation and what to try next. No cryptic logs.</p>
+        <p data-lang-fr>Chaque échec vient avec une explication claire et une piste à essayer. Pas de logs incompréhensibles.</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5h7M7.5 3v2M5 5c0 4 3 7 6 8M10 5c0 3-3 7-6 8"/><path d="M13 21l4-9 4 9M14.5 18h5"/></svg></div>
+        <h3 data-lang-en>English &amp; French</h3><h3 data-lang-fr>Français et anglais</h3>
+        <p data-lang-en>Switch language in one click. Keyboard shortcuts everywhere (Ctrl / ⌘).</p>
+        <p data-lang-fr>Change de langue en un clic. Raccourcis clavier partout (Ctrl / ⌘).</p></div>
+      <div class="f"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
+        <h3 data-lang-en>Private by design</h3><h3 data-lang-fr>Privé par conception</h3>
+        <p data-lang-en>No account, no analytics, no telemetry. Your settings and history stay on your computer.</p>
+        <p data-lang-fr>Pas de compte, pas de statistiques, pas de télémétrie. Tes réglages et ton historique restent chez toi.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:24px">
+  <div class="wrap split">
+    <div class="txt">
+      <div class="eyebrow" data-lang-en>Made for every site</div><div class="eyebrow" data-lang-fr>Pensé pour tous les sites</div>
+      <h2 data-lang-en>It dresses up like the site you paste.</h2><h2 data-lang-fr>Elle prend les couleurs du site collé.</h2>
+      <p class="sub" data-lang-en>Paste a YouTube link and EasyTube turns red. Twitch? Purple. A small touch that makes it feel right at home, on more than a thousand supported sites.</p>
+      <p class="sub" data-lang-fr>Colle un lien YouTube et EasyTube passe au rouge. Twitch ? Violet. Un petit détail qui la rend familière, sur plus d'un millier de sites compatibles.</p>
+      <div class="sites">
+        <span><i style="background:#ff0033"></i>YouTube</span><span><i style="background:#9146ff"></i>Twitch</span><span><i style="background:#25f4ee"></i>TikTok</span><span><i style="background:#e1306c"></i>Instagram</span><span><i style="background:#1877f2"></i>Facebook</span><span><i style="background:#fff"></i>X</span><span><i style="background:#ff5500"></i>SoundCloud</span><span><i style="background:#0066dc"></i>Dailymotion</span><span><i style="background:#1ab7ea"></i>Vimeo</span>
+      </div>
+    </div>
+    <img src="assets/mac-youtube.png" width="1160" height="880" alt="EasyTube with the YouTube theme" loading="lazy">
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap split rev">
+    <div class="txt">
+      <div class="eyebrow" data-lang-en>Batteries included</div><div class="eyebrow" data-lang-fr>Tout est inclus</div>
+      <h2 data-lang-en>Install it. Use it. Done.</h2><h2 data-lang-fr>Installe. Utilise. Terminé.</h2>
+      <ul class="checks" data-lang-en>
+        <li><span><b>yt-dlp and FFmpeg included</b>: nothing else to download or configure.</span></li>
+        <li><span><b>No admin rights</b> on Windows; updates keep your settings and history.</span></li>
+        <li><span><b>A real Mac app</b>: drag to Applications, native menu bar and ⌘ shortcuts.</span></li>
+        <li><span><b>Sign-in options</b> for members-only videos: browser cookies or a cookies.txt file.</span></li>
+      </ul>
+      <ul class="checks" data-lang-fr>
+        <li><span><b>yt-dlp et FFmpeg inclus</b> : rien d'autre à télécharger ni à configurer.</span></li>
+        <li><span><b>Sans droits administrateur</b> sous Windows ; les mises à jour gardent réglages et historique.</span></li>
+        <li><span><b>Une vraie app Mac</b> : glisse-la dans Applications, barre de menus native et raccourcis ⌘.</span></li>
+        <li><span><b>Connexion</b> pour les vidéos réservées : cookies du navigateur ou fichier cookies.txt.</span></li>
+      </ul>
+    </div>
+    <img src="assets/win-audio.png" width="1160" height="880" alt="EasyTube audio-only mode on Windows" loading="lazy">
+  </div>
+</section>
+
+<section id="download" style="padding-top:24px">
+  <div class="wrap center">
+    <div class="eyebrow" data-lang-en>Download</div><div class="eyebrow" data-lang-fr>Télécharger</div>
+    <h2 data-lang-en>Get EasyTube, free.</h2><h2 data-lang-fr>Télécharge EasyTube, gratuitement.</h2>
+    <p class="sub" data-lang-en>Every release lists the SHA-256 of each file so you can check your download.</p>
+    <p class="sub" data-lang-fr>Chaque version indique l'empreinte SHA-256 de chaque fichier pour vérifier ton téléchargement.</p>
+    <div class="dl" style="text-align:left">
+      <div class="card">
+        <div class="os"><svg viewBox="0 0 24 24"><path d="M3 5.5l7.4-1v7.1H3V5.5zm0 13l7.4 1v-7H3v6zm8.3 1.1L21 21v-8.4h-9.7v7zm0-15.2v7.2H21V3l-9.7 1.4z"/></svg><h3>Windows</h3></div>
+        <div class="req">Windows 10 / 11 · 64-bit</div>
+        <ol data-lang-en><li>Download <b>EasyTube-Setup-x.y.z.zip</b></li><li>Unzip it and run the <b>.exe</b></li><li>Done: it installs for your user only</li></ol>
+        <ol data-lang-fr><li>Télécharge <b>EasyTube-Setup-x.y.z.zip</b></li><li>Décompresse-le et lance le <b>.exe</b></li><li>C'est fait : installation pour ton compte uniquement</li></ol>
+        <div class="note" data-lang-en>The installer is not code-signed: SmartScreen may warn you. Click <b>More info → Run anyway</b>.</div>
+        <div class="note" data-lang-fr>L'installateur n'est pas signé : SmartScreen peut afficher un avertissement. Clique sur <b>Informations complémentaires → Exécuter quand même</b>.</div>
+        <a class="btn btn-primary" href="https://github.com/BlackStar798/easytube/releases/latest"><span data-lang-en>Download for Windows</span><span data-lang-fr>Télécharger pour Windows</span></a>
+      </div>
+      <div class="card">
+        <div class="os"><svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM13.9 5c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"/></svg><h3>macOS</h3></div>
+        <div class="req">Apple Silicon (M1+) · macOS 13+</div>
+        <ol data-lang-en><li>Download <b>EasyTube-x.y.z-mac-arm64.zip</b></li><li>Open the <b>.dmg</b> and drag EasyTube to <b>Applications</b></li><li>First launch only: allow it in Settings (below)</li></ol>
+        <ol data-lang-fr><li>Télécharge <b>EasyTube-x.y.z-mac-arm64.zip</b></li><li>Ouvre le <b>.dmg</b> et glisse EasyTube dans <b>Applications</b></li><li>Premier lancement seulement : autorise-la dans les Réglages (ci-dessous)</li></ol>
+        <div class="note" data-lang-en>Not notarized by Apple: the first time, open <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</div>
+        <div class="note" data-lang-fr>Non notarisée par Apple : la première fois, ouvre <b>Réglages Système → Confidentialité et sécurité → Ouvrir quand même</b>.</div>
+        <a class="btn btn-ghost" href="https://github.com/BlackStar798/easytube/releases/latest"><span data-lang-en>Download for macOS</span><span data-lang-fr>Télécharger pour macOS</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:24px">
+  <div class="wrap center">
+    <div class="eyebrow">FAQ</div>
+    <h2 data-lang-en>Questions</h2><h2 data-lang-fr>Questions</h2>
+    <div class="faq" style="text-align:left">
+      <details><summary><span data-lang-en>Is EasyTube really free?</span><span data-lang-fr>EasyTube est vraiment gratuit ?</span></summary>
+        <p data-lang-en>Yes. Free, open source under the MIT License, no ads, no account and no premium version.</p>
+        <p data-lang-fr>Oui. Gratuit, open source sous licence MIT, sans pub, sans compte et sans version payante.</p></details>
+      <details><summary><span data-lang-en>Why does Windows or macOS warn me?</span><span data-lang-fr>Pourquoi Windows ou macOS m'avertit ?</span></summary>
+        <p data-lang-en>Signing an app costs money every year, and EasyTube is a free project. The warning only means the app is not signed. You can compare the SHA-256 listed in each release, or scan the file on VirusTotal.</p>
+        <p data-lang-fr>Signer une app coûte de l'argent chaque année, et EasyTube est un projet gratuit. L'avertissement signifie seulement que l'app n'est pas signée. Tu peux comparer l'empreinte SHA-256 indiquée dans chaque release, ou analyser le fichier sur VirusTotal.</p></details>
+      <details><summary><span data-lang-en>A download stopped working. What do I do?</span><span data-lang-fr>Un téléchargement ne marche plus, que faire ?</span></summary>
+        <p data-lang-en>Websites change often. Open <b>Settings → Check for updates</b>: a newer yt-dlp usually fixes it. Still stuck? Open an issue on GitHub with the "Copy diagnostics" text from About.</p>
+        <p data-lang-fr>Les sites changent souvent. Ouvre <b>Réglages → Vérifier les mises à jour</b> : un yt-dlp plus récent règle souvent le problème. Toujours bloqué ? Ouvre une issue sur GitHub avec le texte « Copier le diagnostic » de À propos.</p></details>
+      <details><summary><span data-lang-en>Does it work on Intel Macs?</span><span data-lang-fr>Ça marche sur les Mac Intel ?</span></summary>
+        <p data-lang-en>The current build targets Apple Silicon (M1 and newer). Intel Macs can build it from source (see BUILDING.md).</p>
+        <p data-lang-fr>La version actuelle vise les Mac Apple Silicon (M1 et plus récents). Sur Mac Intel, il est possible de la compiler depuis les sources (voir BUILDING.md).</p></details>
+      <details><summary><span data-lang-en>Is it legal?</span><span data-lang-fr>Est-ce légal ?</span></summary>
+        <p data-lang-en>EasyTube is a tool for personal use. You are responsible for respecting copyright and each website's terms of use.</p>
+        <p data-lang-fr>EasyTube est un outil pour un usage personnel. Tu es responsable du respect du droit d'auteur et des conditions d'utilisation de chaque site.</p></details>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:24px">
+  <div class="wrap">
+    <div class="final">
+      <img src="assets/icon.png" width="72" height="72" alt="" style="margin:0 auto 24px;border-radius:18px">
+      <h2 data-lang-en>Ready when you are.</h2><h2 data-lang-fr>Prête quand tu l'es.</h2>
+      <p class="sub" style="margin:0 auto" data-lang-en>Free, light and open source. Made with care, with the help of Claude Code.</p>
+      <p class="sub" style="margin:0 auto" data-lang-fr>Gratuite, légère et open source. Faite avec soin, avec l'aide de Claude Code.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="https://github.com/BlackStar798/easytube/releases/latest"><span data-lang-en>Download EasyTube</span><span data-lang-fr>Télécharger EasyTube</span></a>
+        <a class="btn btn-ghost" href="https://github.com/BlackStar798/easytube"><span data-lang-en>View on GitHub</span><span data-lang-fr>Voir sur GitHub</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p data-lang-en>EasyTube is an independent project, not affiliated with yt-dlp, YouTube or any other site. Powered by yt-dlp and FFmpeg — thank you to their contributors.</p>
+    <p data-lang-fr>EasyTube est un projet indépendant, non affilié à yt-dlp, YouTube ou tout autre site. Propulsé par yt-dlp et FFmpeg — merci à leurs contributeurs.</p>
+    <div class="fl">
+      <a href="https://github.com/BlackStar798/easytube">GitHub</a>
+      <a href="https://github.com/BlackStar798/easytube/releases">Releases</a>
+      <a href="https://github.com/BlackStar798/easytube/blob/main/LICENSE">MIT License</a>
+      <a href="https://github.com/BlackStar798/easytube/blob/main/THIRD_PARTY_NOTICES.md">Credits</a>
+      <a href="https://github.com/BlackStar798/easytube/issues">Issues</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,btns=document.querySelectorAll('.lang button');
+  function set(l){root.lang=l;btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.set===l)});try{localStorage.setItem('et-lang',l)}catch(e){}}
+  var saved=null;try{saved=localStorage.getItem('et-lang')}catch(e){}
+  set(saved||((navigator.language||'').toLowerCase().indexOf('fr')===0?'fr':'en'));
+  btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.set)})});
+})();
+</script>
+</body>
+</html>
