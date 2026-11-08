@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https: data:; connect-src 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EasyTube</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="booting">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M19 7h1M4 17h1M11 17h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2.4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="17" r="2.4" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 9V6.5A2.5 2.5 0 0 0 12.5 4h-6A2.5 2.5 0 0 0 4 6.5v6A2.5 2.5 0 0 0 6.5 15H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v10m0 0l-4.5-4.5M12 14l4.5-4.5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><svg width="18" height="18"><use href="#i-down"/></svg></span>
+      <span class="brand-name">EasyTube</span>
+    </div>
+    <div class="top-actions">
+      <div class="lang-switch" role="group" data-i18n-attr="aria-label:lang.aria">
+        <button type="button" data-lang="en" aria-pressed="true" lang="en" title="English">EN</button>
+        <button type="button" data-lang="fr" aria-pressed="false" lang="fr" title="Français">FR</button>
+      </div>
+      <button id="btn-settings" class="icon-btn" type="button" data-i18n-attr="aria-label:topbar.settings;title:topbar.settings">
+        <svg width="20" height="20"><use href="#i-sliders"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="app" data-state="idle">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1><span data-i18n="hero.title">Paste a video link</span><span class="spark" aria-hidden="true">✨</span></h1>
+        <p class="lede" data-i18n="hero.lede">YouTube, Facebook, Instagram, TikTok, X, Dailymotion and hundreds of other sites.</p>
+      </div>
+
+      <form id="url-form" class="urlbar" autocomplete="off">
+        <span id="site-chip" class="site-chip" role="status" hidden><i class="site-dot" aria-hidden="true"></i><span id="site-name"></span></span>
+        <label class="sr-only" for="url" data-i18n="url.label">Video link</label>
+        <input id="url" type="text" inputmode="url" spellcheck="false" placeholder="https://">
+        <button id="btn-paste" class="bar-btn" type="button"><span class="emo" aria-hidden="true">📋</span><span data-i18n="btn.paste">Paste</span></button>
+        <button id="btn-analyze" class="bar-btn bar-go" type="submit"><span class="emo" aria-hidden="true">🔍</span><span data-i18n="btn.analyze">Analyze</span></button>
+      </form>
+
+      <div id="clip-hint" class="hint-line" hidden>
+        <span data-i18n="clip.hint">Link found in the clipboard.</span>
+        <button id="btn-clip" class="text-btn" type="button" data-i18n="clip.use">Use this link</button>
+      </div>
+
+      <div id="upd-banner" class="banner" hidden>
+        <span class="emo" aria-hidden="true">🆕</span>
+        <span id="upd-banner-text" data-i18n="banner.default">A new version of the download engine is available.</span>
+        <button id="btn-banner-update" class="text-btn" type="button" data-i18n="banner.update">Update</button>
+      </div>
+
+      <div id="app-banner" class="banner" hidden>
+        <span class="emo" aria-hidden="true">🎁</span>
+        <span id="app-banner-text"></span>
+        <button id="btn-app-banner" class="text-btn" type="button" data-i18n="banner.app.open">Open the download page</button>
+      </div>
+
+      <div id="idle-error" class="alert" role="alert" hidden>
+        <strong id="idle-error-title"></strong>
+        <span id="idle-error-hint"></span>
+        <button id="btn-idle-update" class="text-btn" type="button" hidden data-i18n="idle.update">Update yt-dlp</button>
+        <details class="details" id="idle-details" hidden>
+          <summary data-i18n="err.details">Technical details</summary>
+          <pre id="idle-detail"></pre>
+          <button class="text-btn small" type="button" id="btn-idle-copy" data-i18n="err.copy">Copy for a bug report</button>
+        </details>
+      </div>
+    </section>
+
+    <section class="stage">
+      <div class="preview">
+        <div class="frame" id="frame" style="--p:0%">
+          <div class="frame-empty">
+            <span class="frame-emoji" aria-hidden="true">🎬</span>
+            <span data-i18n="frame.empty">The video preview appears here</span>
+          </div>
+          <img class="thumb thumb-base" id="thumb-base" alt="" referrerpolicy="no-referrer">
+          <img class="thumb thumb-color" id="thumb-color" alt="" referrerpolicy="no-referrer">
+          <div class="playhead" aria-hidden="true"></div>
+          <span class="badge" id="duration" hidden></span>
+        </div>
+        <h2 id="title" class="title"></h2>
+        <p id="uploader" class="muted"></p>
+      </div>
+
+      <div class="panel">
+        <!-- Accueil -->
+        <div class="pane pane-idle">
+          <div class="dest" id="dest-idle">
+            <svg width="20" height="20" aria-hidden="true"><use href="#i-folder"/></svg>
+            <span class="dest-text">
+              <span class="muted small" data-i18n="dest.label">Download folder</span>
+              <span class="dest-path" id="dest-path-idle"></span>
+            </span>
+            <button class="text-btn" type="button" data-act="folder" data-i18n="dest.change">Change</button>
+          </div>
+          <div id="recents" hidden>
+            <div class="sub-row">
+              <h2 class="sub" data-i18n="recents.title">History</h2>
+              <button id="btn-clear-history" class="text-btn small" type="button" data-i18n="history.clear">Clear all</button>
+            </div>
+            <ul id="recent-list" class="recents"></ul>
+          </div>
+          <div id="tips" class="tips" hidden>
+            <h2 class="sub" data-i18n="tips.title">Tips</h2>
+            <ul>
+              <li><span aria-hidden="true">📚</span><span data-i18n="tips.1">Paste several links at once: they all go into the queue.</span></li>
+              <li><span aria-hidden="true">⌨️</span><span data-i18n="tips.2">Ctrl+V pastes and analyzes a link, Ctrl+L selects the bar.</span></li>
+              <li><span aria-hidden="true">🖱️</span><span data-i18n="tips.3">You can also drag a link from your browser onto this window.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Analyse -->
+        <div class="pane pane-loading" role="status">
+          <p class="loading-text"><span class="emo emo-wiggle" aria-hidden="true">🔍</span><span data-i18n="loading.title">Analyzing the link…</span></p>
+          <p class="muted" data-i18n="loading.sub">This takes a few seconds.</p>
+        </div>
+
+        <!-- Choix -->
+        <div class="pane pane-ready">
+          <div class="seg" role="group" data-i18n-attr="aria-label:seg.aria">
+            <button type="button" data-kind="video" aria-pressed="true"><span class="emo" aria-hidden="true">🎞️</span><span data-i18n="seg.video">Video</span></button>
+            <button type="button" data-kind="audio" aria-pressed="false"><span class="emo" aria-hidden="true">🎧</span><span data-i18n="seg.audio">Audio only</span></button>
+          </div>
+
+          <fieldset class="group" id="grp-quality">
+            <legend data-i18n="quality.legend">✨ Quality</legend>
+            <div class="rows" id="quality-list"></div>
+          </fieldset>
+
+          <div class="opt-row" id="row-container">
+            <span class="opt-label" id="container-label" data-i18n="container.label">Container</span>
+            <div class="seg seg-mini" role="group" aria-labelledby="container-label">
+              <button type="button" data-container="mp4" aria-pressed="true">MP4</button>
+              <button type="button" data-container="mkv" aria-pressed="false">MKV</button>
+            </div>
+          </div>
+          <p class="hint-note" id="hint-codec" hidden data-i18n="container.hint">Above 1080p, sites use VP9/AV1 video. If the file does not play, choose MKV.</p>
+
+          <details class="pl-select" id="pl-select" hidden>
+            <summary id="pl-summary"></summary>
+            <div class="pl-tools">
+              <button type="button" class="text-btn small" id="pl-all" data-i18n="pl.all">All</button>
+              <button type="button" class="text-btn small" id="pl-none" data-i18n="pl.none">None</button>
+            </div>
+            <ul id="pl-list" class="pl-list"></ul>
+            <p class="muted small" id="pl-more" hidden></p>
+          </details>
+
+          <fieldset class="group" id="grp-audio" hidden>
+            <legend data-i18n="format.legend">🎼 File format</legend>
+            <div class="rows" id="audio-list"></div>
+          </fieldset>
+
+          <label class="toggle" id="row-subs">
+            <input type="checkbox" id="subs">
+            <span class="box" aria-hidden="true"><svg width="14" height="14"><use href="#i-check"/></svg></span>
+            <span><span data-i18n="subs.label">💬 Add subtitles</span> <span class="muted" id="subs-langs">(FR, EN, AR)</span></span>
+          </label>
+
+          <div class="dest">
+            <svg width="20" height="20" aria-hidden="true"><use href="#i-folder"/></svg>
+            <span class="dest-text"><span class="dest-path" id="dest-path"></span></span>
+            <button class="text-btn" type="button" data-act="folder" data-i18n="dest.change">Change</button>
+          </div>
+
+          <div class="cta-row">
+            <button id="btn-download" class="cta" type="button">
+              <span class="cta-emoji" aria-hidden="true">⚡</span>
+              <span data-i18n="cta.download">Download</span>
+              <span class="cta-size" id="cta-size"></span>
+            </button>
+            <button id="btn-queue-add" class="ghost ghost-tall" type="button" data-i18n-attr="title:queue.add">
+              <span aria-hidden="true">＋</span> <span id="queue-add-label" data-i18n="queue.addshort">Queue</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Téléchargement -->
+        <div class="pane pane-progress">
+          <p class="dl-title" id="dl-title"></p>
+          <p class="muted small" id="dl-queue" hidden></p>
+          <div class="pct" aria-hidden="true"><span id="pct">0</span><span class="pct-sign">%</span></div>
+          <p class="step" aria-live="polite"><span class="step-emoji" id="step-emoji" aria-hidden="true">⏳</span><span id="step-text" data-i18n="step.prepare">Preparing…</span></p>
+          <div class="track" id="track" role="progressbar" data-i18n-attr="aria-label:progress.aria" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="fill"><span class="rocket" aria-hidden="true">🚀</span></div>
+          </div>
+          <dl class="stats">
+            <div><dt data-i18n="stat.speed">Speed</dt><dd id="speed">—</dd></div>
+            <div><dt data-i18n="stat.eta">Time left</dt><dd id="eta">—</dd></div>
+            <div><dt data-i18n="stat.recv">Received</dt><dd id="recv">—</dd></div>
+          </dl>
+          <button id="btn-cancel" class="ghost" type="button" data-i18n="btn.cancel">✋ Cancel</button>
+        </div>
+
+        <!-- Terminé -->
+        <div class="pane pane-done">
+          <div class="done-head">
+            <span class="seal" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24"><path class="check-path" pathLength="1" d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="party" aria-hidden="true">🎉</span>
+          </div>
+          <h2 class="done-title" tabindex="-1" id="done-title">Done!</h2>
+          <p class="done-file" id="done-file"></p>
+          <p class="note" id="done-note" hidden></p>
+          <div class="actions">
+            <button id="btn-play" class="cta cta-inline" type="button">Play video</button>
+            <button id="btn-show" class="ghost" type="button" data-i18n="done.show">Show in folder</button>
+          </div>
+          <button id="btn-new" class="text-btn" type="button" data-i18n="done.new">Download something else ➜</button>
+        </div>
+
+        <!-- Erreur -->
+        <div class="pane pane-error" role="alert">
+          <span class="err-emoji" aria-hidden="true">😕</span>
+          <h2 class="err-title" id="err-title"></h2>
+          <p id="err-hint"></p>
+          <details class="details" id="err-details">
+            <summary data-i18n="err.details">Technical details</summary>
+            <pre id="err-detail"></pre>
+            <button class="text-btn small" type="button" id="btn-err-copy" data-i18n="err.copy">Copy for a bug report</button>
+          </details>
+          <div class="actions">
+            <button id="btn-retry" class="cta cta-inline" type="button" data-i18n="err.retry">Try again</button>
+            <button id="btn-err-update" class="ghost" type="button" hidden data-i18n="err.update">Update yt-dlp</button>
+          </div>
+          <p class="muted" id="err-update-status" aria-live="polite"></p>
+          <button id="btn-err-back" class="text-btn" type="button" data-i18n="err.back">Change link</button>
+        </div>
+
+        <!-- File d'attente -->
+        <section id="queue" class="queue" hidden aria-labelledby="queue-title">
+          <div class="queue-head">
+            <h2 id="queue-title" class="sub"><span data-i18n="queue.title">Queue</span> <span class="count" id="queue-count"></span></h2>
+            <span class="queue-actions">
+              <button id="btn-queue-start" class="text-btn small" type="button" data-i18n="queue.start">Start</button>
+              <button id="btn-queue-clear" class="text-btn small" type="button" data-i18n="queue.clear">Clear</button>
+            </span>
+          </div>
+          <p class="muted small" id="queue-msg" aria-live="polite"></p>
+          <ul id="queue-list" class="queue-list"></ul>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
+    <div class="welcome-inner">
+      <span class="welcome-logo" aria-hidden="true"><svg width="34" height="34"><use href="#i-down"/></svg></span>
+      <h2 id="welcome-title" class="welcome-title"><span data-i18n="welcome.title">Welcome to EasyTube</span><span class="wave" aria-hidden="true">👋</span></h2>
+      <p class="welcome-lede" data-i18n="welcome.lede">Save videos and audio from almost any website, in a few clicks. Free, with no account needed.</p>
+
+      <ul class="sites" data-i18n-attr="aria-label:welcome.sites.aria">
+        <li>YouTube</li>
+        <li>Twitch</li>
+        <li>Facebook</li>
+        <li>Instagram</li>
+        <li>TikTok</li>
+        <li>X</li>
+        <li>Vimeo</li>
+        <li>Dailymotion</li>
+        <li>Reddit</li>
+        <li>SoundCloud</li>
+        <li class="more" data-i18n="welcome.more">+ hundreds more</li>
+      </ul>
+
+      <ol class="how">
+        <li><span class="how-n" aria-hidden="true">1</span><span class="how-emo" aria-hidden="true">📋</span><strong data-i18n="welcome.s1.title">Paste a link</strong><span data-i18n="welcome.s1.text"></span></li>
+        <li><span class="how-n" aria-hidden="true">2</span><span class="how-emo" aria-hidden="true">🎞️</span><strong data-i18n="welcome.s2.title">Choose how</strong><span data-i18n="welcome.s2.text"></span></li>
+        <li><span class="how-n" aria-hidden="true">3</span><span class="how-emo" aria-hidden="true">⚡</span><strong data-i18n="welcome.s3.title">Download</strong><span data-i18n="welcome.s3.text"></span></li>
+      </ol>
+
+      <div class="welcome-foot">
+        <button id="btn-welcome" class="cta cta-inline" type="button"><span data-i18n="welcome.start">Get started</span><span class="cta-arrow" aria-hidden="true">➜</span></button>
+        <p class="muted small" data-i18n="welcome.note"></p>
+      </div>
+    </div>
+  </section>
+
+  <dialog id="settings" aria-labelledby="settings-title">
+    <form method="dialog" class="settings has-foot">
+      <h2 id="settings-title" data-i18n="settings.title">Settings ⚙️</h2>
+
+      <section class="set-section" aria-labelledby="set-h-dl">
+        <h3 class="set-h" id="set-h-dl" data-i18n="settings.sec.downloads">Downloads</h3>
+        <div class="field">
+          <span class="field-label" data-i18n="settings.folder">📁 Download folder</span>
+          <div class="dest">
+            <svg width="20" height="20" aria-hidden="true"><use href="#i-folder"/></svg>
+            <span class="dest-text"><span class="dest-path" id="dest-path-set"></span></span>
+            <button class="text-btn" type="button" data-act="folder" data-i18n="dest.change">Change</button>
+          </div>
+          <button class="text-btn" type="button" id="btn-open-folder" data-i18n="settings.openfolder">Open this folder</button>
+        </div>
+      </section>
+
+      <section class="set-section" aria-labelledby="set-h-net">
+        <h3 class="set-h" id="set-h-net" data-i18n="settings.sec.signin">Sign-in</h3>
+        <div class="field">
+          <label class="field-label" for="cookies" data-i18n="settings.cookies">🔑 Browser where you're signed in</label>
+          <select id="cookies">
+            <option value="" data-i18n="settings.cookies.none">None</option>
+            <option value="firefox">Firefox</option>
+            <option value="edge">Microsoft Edge</option>
+            <option value="chrome">Google Chrome</option>
+            <option value="brave">Brave</option>
+            <option value="safari">Safari</option>
+            <option value="file" data-i18n="settings.cookies.file">cookies.txt file</option>
+          </select>
+          <div class="dest" id="cookies-file-row" hidden>
+            <svg width="20" height="20" aria-hidden="true"><use href="#i-folder"/></svg>
+            <span class="dest-text"><span class="dest-path" id="cookies-file-name"></span></span>
+            <button class="text-btn" type="button" id="btn-cookies-pick" data-i18n="settings.cookies.pick">Choose a file…</button>
+            <button class="text-btn" type="button" id="btn-cookies-clear" data-i18n="settings.cookies.clear">Remove</button>
+          </div>
+          <p class="note" id="cookies-warn" hidden data-i18n="settings.cookies.warn"></p>
+          <p class="note" id="cookies-bad" hidden data-i18n="settings.cookies.badfile"></p>
+          <p class="muted small" data-i18n="settings.cookies.help"></p>
+        </div>
+      </section>
+
+      <section class="set-section" aria-labelledby="set-h-look">
+        <h3 class="set-h" id="set-h-look" data-i18n="settings.sec.look">Appearance</h3>
+        <label class="toggle" id="row-platform">
+          <input type="checkbox" id="platform-theme">
+          <span class="box" aria-hidden="true"><svg width="14" height="14"><use href="#i-check"/></svg></span>
+          <span data-i18n="settings.platform"></span>
+        </label>
+
+        <div class="field">
+          <span class="field-label" id="swatch-label" data-i18n="settings.color">🎨 App color</span>
+          <div class="swatches" id="swatches" role="radiogroup" aria-labelledby="swatch-label">
+            <label class="swatch swatch-custom" id="swatch-custom" data-i18n-attr="title:swatch.custom">
+              <input type="color" id="custom-color" value="#8b5cf6" data-i18n-attr="aria-label:swatch.custom">
+              <span aria-hidden="true">+</span>
+            </label>
+          </div>
+        </div>
+
+        <label class="toggle" id="row-sound">
+          <input type="checkbox" id="sound">
+          <span class="box" aria-hidden="true"><svg width="14" height="14"><use href="#i-check"/></svg></span>
+          <span data-i18n="settings.sound">🔔 Play a little sound when a download finishes</span>
+        </label>
+      </section>
+
+      <section class="set-section" aria-labelledby="set-h-eng">
+        <h3 class="set-h" id="set-h-eng" data-i18n="settings.engine">🚀 Download engine</h3>
+        <div class="field">
+          <p>yt-dlp <strong id="ver">…</strong></p>
+          <p class="muted small" data-i18n="settings.engine.help"></p>
+          <div class="inline">
+            <button class="ghost" type="button" id="btn-upd" data-i18n="settings.engine.check">Check for updates</button>
+            <span class="muted" id="upd-status" aria-live="polite"></span>
+          </div>
+        </div>
+        <label class="toggle" id="row-autocheck">
+          <input type="checkbox" id="autocheck">
+          <span class="box" aria-hidden="true"><svg width="14" height="14"><use href="#i-check"/></svg></span>
+          <span data-i18n="settings.autocheck">🔄 Look for new versions automatically</span>
+        </label>
+      </section>
+
+      <details class="set-adv" id="set-adv">
+        <summary data-i18n="settings.advanced">Advanced</summary>
+        <div class="set-adv-body">
+          <div class="field">
+            <label class="field-label" for="limit" data-i18n="settings.limit">🐢 Speed limit</label>
+            <select id="limit"></select>
+            <p class="muted small" data-i18n="settings.limit.help"></p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="sublangs" data-i18n="settings.sublangs">💬 Subtitle languages</label>
+            <input id="sublangs" class="text-input" type="text" spellcheck="false" autocomplete="off" placeholder="fr, en, ar">
+            <p class="muted small" id="sublangs-help" data-i18n="settings.sublangs.help"></p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="proxy" data-i18n="settings.proxy">🌐 Proxy</label>
+            <input id="proxy" class="text-input" type="text" spellcheck="false" autocomplete="off" placeholder="http://127.0.0.1:8080">
+            <p class="muted small" id="proxy-help" data-i18n="settings.proxy.help"></p>
+          </div>
+          <label class="toggle" id="row-jshelper">
+            <input type="checkbox" id="jshelper">
+            <span class="box" aria-hidden="true"><svg width="14" height="14"><use href="#i-check"/></svg></span>
+            <span><span data-i18n="settings.jshelper">🧩 Use EasyTube's built-in helper for YouTube</span><span class="muted small block" data-i18n="settings.jshelper.help"></span></span>
+          </label>
+        </div>
+      </details>
+
+      <div class="field links">
+        <button class="text-btn" type="button" id="btn-welcome-again" data-i18n="settings.welcome">👋 Show the welcome screen</button>
+        <button class="text-btn" type="button" id="btn-data" data-i18n="settings.data">Open the program's data folder</button>
+        <button class="text-btn" type="button" id="btn-about" data-i18n="settings.about">ℹ️ About EasyTube &amp; licenses</button>
+      </div>
+
+      <div class="set-foot">
+        <button class="cta cta-inline" value="close" data-i18n="settings.close">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="about" aria-labelledby="about-title">
+    <form method="dialog" class="settings about">
+      <div class="about-head">
+        <span class="logo logo-lg" aria-hidden="true"><svg width="26" height="26"><use href="#i-down"/></svg></span>
+        <div>
+          <h2 id="about-title">EasyTube</h2>
+          <p class="muted" id="about-ver"></p>
+        </div>
+      </div>
+      <p data-i18n="about.lede"></p>
+
+      <div class="field">
+        <span class="field-label" data-i18n="about.credits">License and credits</span>
+        <ul class="credits">
+          <li><span class="cr-name"><strong>EasyTube</strong></span><span class="cr-role" data-i18n="about.license.value"></span><em id="about-license">MIT</em></li>
+          <li><span class="cr-name"><strong>yt-dlp</strong><small id="about-ytdlp">…</small></span><span class="cr-role" data-i18n="about.credit.ytdlp"></span><em>Unlicense · GPL-3.0+</em></li>
+          <li><span class="cr-name"><strong>FFmpeg</strong><small id="about-ffmpeg">…</small></span><span class="cr-role" data-i18n="about.credit.ffmpeg"></span><em>GPL-3.0</em></li>
+          <li><span class="cr-name"><strong>Electron</strong><small id="about-electron">…</small></span><span class="cr-role" data-i18n="about.credit.electron"></span><em>MIT</em></li>
+          <li><span class="cr-name"><strong>Bricolage Grotesque</strong></span><span class="cr-role" data-i18n="about.credit.font"></span><em>OFL-1.1</em></li>
+        </ul>
+      </div>
+
+      <p class="muted small" data-i18n="about.note"></p>
+      <div class="inline">
+        <button class="ghost" type="button" id="btn-licenses" data-i18n="about.open">📄 Open the licenses folder</button>
+        <button class="ghost" type="button" id="btn-repo" data-i18n="about.repo" hidden>🔗 Project page</button>
+      </div>
+      <div class="inline">
+        <button class="ghost" type="button" id="btn-diag" data-i18n="about.diag">📋 Copy diagnostics</button>
+        <button class="ghost" type="button" id="btn-appupd" data-i18n="about.checkupdate" hidden>🔎 Check for a new version</button>
+      </div>
+      <p class="muted small" id="about-status" aria-live="polite"></p>
+
+      <div class="actions end">
+        <button class="cta cta-inline" value="close" data-i18n="settings.close">Close</button>
+      </div>
+    </form>
+  </dialog>
+
+  <canvas id="confetti" aria-hidden="true" hidden></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
