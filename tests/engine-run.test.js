@@ -7,10 +7,14 @@ const os = require('node:os');
 const path = require('node:path');
 const { Engine, probeJsRuntime } = require('../lib/engine');
 
-const FAKE = path.join(__dirname, 'fixtures', 'fake-ytdlp.js');
 const skip = process.platform === 'win32' ? 'the fake yt-dlp needs a Unix shebang' : false;
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'easytube-test-'));
 test.after(() => fs.rmSync(tmp, { recursive: true, force: true }));
+// Run a copy of the fake yt-dlp with its executable bit set: the bit is not always kept
+// in the repository (for example when files are added through the GitHub web uploader).
+const FAKE = path.join(tmp, 'fake-ytdlp.js');
+fs.copyFileSync(path.join(__dirname, 'fixtures', 'fake-ytdlp.js'), FAKE);
+if (process.platform !== 'win32') fs.chmodSync(FAKE, 0o755);
 
 function engine(mode, extra = {}) {
   const argsFile = path.join(tmp, `args-${mode}-${Math.random().toString(36).slice(2)}.json`);
